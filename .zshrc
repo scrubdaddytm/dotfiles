@@ -8,7 +8,7 @@ if [ ! -d $ZSH ]; then
 
     # Install oh-my-zsh and plugins
     git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git $ZSH
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH/custom/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 
     # Install vimplug and vim plugins
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -16,13 +16,14 @@ if [ ! -d $ZSH ]; then
 
     # Install tmux plugin stuff
     git clone https://github.com/tmux-plugins/tpm $TMUX_HOME/plugins/tpm
+    #git clone https://github.com/powerline/powerline $TMUX_HOME/powerline
 
     echo "Finished setup"
 fi
 
 ZSH_THEME="agnoster-mod"
 
-plugins=(colored-man-pages git history history-substring-search zsh-syntax-highlighting common-aliases)
+plugins=(colored-man-pages git history history-substring-search common-aliases zsh-syntax-highlighting)
 
 # User configuration
 
@@ -32,10 +33,11 @@ export LANG=en_US.UTF-8
 
 export HOME_GIT=$HOME'/pg/homedirs/users/tucker'
 export EDITOR='vim'
+export DEV_HOST='comproddev1-uswest1adevc'
 export TERRAFORM_HOME=$HOME'/pg/terraform/'
-export VIM_DIST=$HOME'/pg/vim8/dist/trusty/usr/bin/vim8'
+export GOPATH=$HOME'/pg/github'
 
-export PATH=$PATH:~/bin
+export PATH=$PATH:~/bin:$GOPATH/bin
 
 function safe_source() {
     echo eval " \
@@ -47,15 +49,12 @@ function safe_source() {
     fi \
 "; }
 
-# `safe_source ~/.zsh/functions`
+`safe_source ~/.zsh/functions`
 
-if [ -d '$VIM_DIST' ]; then
-    alias vim=$VIM_DIST' -p'
-elif type vim8 >/dev/null 2>/dev/null; then
-    alias vim='vim8 -p'
-else
-    alias vim='vim -p'
-fi
+alias old-vim=/usr/bin/vim
+alias old-vi=/usr/bin/vim
+alias vim=nvim
+alias vi=nvim
 
 if [[ -n $TMUX ]]; then
     PROMPT_COMMAND='eval "$(/nail/scripts/tmux-env)"; '"$PROMPT_COMMAND"
@@ -78,5 +77,11 @@ alias clea='clear'
 alias gitgraph='git log --graph --pretty=oneline --abbrev-commit '
 alias gp='git push '
 alias gs='git status '
+
+alias dev='ssh -A $DEV_HOST'
+alias ym='cd ~/pg/yelp-main'
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 DEFAULT_USER=tucker
