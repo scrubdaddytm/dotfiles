@@ -12,6 +12,7 @@ if [ ! -d $ZSH ]; then
 
     # Install vimplug and vim plugins
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    ln -sf ~/.vim/autoload/plug.vim ~/.local/share/nvim/site/autoload/plug.vim
     vim +PlugInstall +qall
 
     # Install tmux plugin stuff
