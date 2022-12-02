@@ -1,6 +1,3 @@
-[user]
-    email = tucker@yelp.com
-    name = tucker
 [alias]
     sha = rev-parse HEAD
     pretty = log --graph --pretty=oneline --abbrev-commit
