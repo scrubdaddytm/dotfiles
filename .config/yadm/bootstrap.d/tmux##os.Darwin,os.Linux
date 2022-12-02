@@ -1,0 +1,11 @@
+#!/bin/sh
+
+git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git $ZSH
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+git clone https://github.com/dracula/zsh-syntax-highlighting.git $ZSH_CUSTOM/themes/dracula-zsh-syntax-highlighting
+
+git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+git clone https://github.com/dracula/powerlevel10k.git $ZSH_CUSTOM/themes/dracula-powerlevel10k
+cp $ZSH_CUSTOM/themes/dracula-powerlevel10k/files/.p10k.zsh ~/.p10k.zsh
+
+git clone https://github.com/tmux-plugins/tpm $TMUX_HOME/plugins/tpm

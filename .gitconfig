@@ -1,3 +1,6 @@
+[user]
+    email = tucker@yelp.com
+    name = tucker
 [alias]
     sha = rev-parse HEAD
     pretty = log --graph --pretty=oneline --abbrev-commit
@@ -6,9 +9,11 @@
 [branch]
     autosetuprebase = always
 [pull]
-    rebase = preserve
+    rebase = true
 [diff]
     renames = true
 [rebase]
     autostash = true
     stat = true
+[include]
+    path = .gitconfig.local
