@@ -3,40 +3,60 @@ if !has('nvim')
     set nocompatible " Default in nvim
 endif
 
+set rtp+=/usr/bin/fzf
+
 call plug#begin('~/.vim/plugged')
 
-Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
-Plug 'airblade/vim-rooter'
-Plug 'simnalamburt/vim-mundo'
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-repeat'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'arcticicestudio/nord-vim'
-Plug '/usr/bin/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'rhysd/committia.vim'
+
+""" TRYING 'NEW' THINGS
+Plug 'preservim/nerdtree'
+Plug 'preservim/tagbar'
+"""
+
+"" GIT
+Plug 'airblade/vim-gitgutter'
 Plug 'zivyangll/git-blame.vim'
-Plug 'sjl/gundo.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'rhysd/committia.vim'
+
+"" point out syntax problems
 Plug 'scrooloose/syntastic'
 
+"" Change the working directory to the project root when you open a file or directory
+Plug 'airblade/vim-rooter'
+"" seamless navigation between tmux panes and vim splits
+Plug 'christoomey/vim-tmux-navigator'
+
+"" Improve editing
+Plug 'mg979/vim-visual-multi'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-surround'
+Plug 'sjl/gundo.vim'
+
+Plug 'dracula/vim', {'as': 'dracula'}
+
+"" fancy bottomline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" nvim specific plugins.
 if has('nvim')
+    " Async completion framework
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    " Plug 'neomake/neomake'
-    " Plug 'w0rp/ale'
+    Plug 'deoplete-plugins/deoplete-jedi'
+
+    " Help with the billion keybindings vim has
+    Plug 'folke/which-key.nvim'
 endif
 
 call plug#end()
 
-"" 
-set autoread
-set backspace=2
+""
 set encoding=utf8
 set hidden
 set visualbell
@@ -46,46 +66,33 @@ set undofile
 set undodir=~/.vim/undo
 
 "" Spaces >>>> tabs
-syntax enable
 set expandtab
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
-
-"" UI
-set list
-set listchars=tab:→~,nbsp:␣,trail:•,precedes:«,extends:»
-
-"colorscheme solarized
-"let g:airline_theme='solarized'
-colorscheme nord
-let g:airline_powerline_fonts = 1
+autocmd FileType lua setlocal shiftwidth=2 tabstop=2
 
 set number
 filetype on
 filetype indent on
 filetype plugin on
-set laststatus=2
 set lazyredraw
 set linebreak
 set showmatch
+set cursorline
 
 if !has('nvim') " nvim defaults
     set showcmd
-    set wildmenu
 endif
 
 "" Searching
 set ignorecase
-set incsearch
 set smartcase
 
 if !has('nvim')
     set hlsearch " Default in nvim
 endif
-
-set tags=./tags;/
 
 set showmode
 
@@ -105,14 +112,7 @@ abbr istrace import ipdb; ipdb.set_trace()
 abbr strace ipdb.set_trace()
 
 if has('nvim')
-    " python syntax checking ASYNC ty based nvim
-    " let g:neomake_python_enabled_makers = ['flake8', 'pep8']
-    " let g:neomake_python_flake8_maker = { 'args': ['--ignore=E501'], }
-    " let g:neomake_python_pep8_maker = { 'args': ['--max-line-length=120'], }
-
-    " let g:ale_linters = { 'python': ['flake8', 'pylint'], }
-    " let g:ale_fixers = { 'python': ['autopep8', 'yapf', 'add_blank_lines_for_python_control_statements', 'isort', 'remove_trailing_lines'], }
-    " let g:airline#extensions#ale#enabled = 1
+    let g:deoplete#enable_at_startup = 1
 endif
 
 set statusline+=%#warningmsg#
@@ -124,6 +124,7 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_python_checkers = ['python', 'flake8']
+let g:syntastic_python_python_exec = 'python3'
 
 """ Mappings
 let mapleader=","
@@ -133,6 +134,9 @@ map ; :
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
 noremap <f12> :!ctags -L <(find . -name '*.py') --fields=+iaS --python-kinds=-i --sort=yes --extra=+q<cr>
 map <F5> :w<CR>:!ipython "%"<CR>
+
+nmap <F7> :NERDTreeToggle<CR>
+nmap <F8> :TagbarToggle<CR>
 
 nnoremap <leader>s :<C-u>call gitblame#echo()<CR>
 
@@ -149,6 +153,9 @@ noremap <C-K> <C-W>k<C-W>_
 noremap <C-H> <C-W>h<C-W>_
 noremap <C-L> <C-W>l<C-W>_
 
+" FZF
+nnoremap <leader>f :FZF<cr>
+
 "" Visual mode mappings
 vnoremap // y/<C-R>"<CR>
 
@@ -160,3 +167,30 @@ inoremap jk <esc>
 inoremap jj <esc>
 inoremap kj <esc>
 inoremap ;; <esc>
+
+lua << EOF
+  require("which-key").setup {
+    -- default configuration currently
+  }
+EOF
+
+"" UI
+set list
+set listchars=tab:→~,nbsp:␣,trail:•,precedes:«,extends:»
+
+set t_Co=256
+
+let g:airline_powerline_fonts = 1
+" let g:nord_cursor_line_number_background = 1
+" let g:nord_uniform_diff_background = 1
+" let g:nord_uniform_status_lines = 1
+
+" augroup nord-theme-overrides
+"   autocmd!
+"   " Use 'nord7' as foreground color for Vim comment titles.
+"   autocmd ColorScheme nord highlight Comment ctermfg=14 guifg=D8DEE9
+" augroup END
+
+" MUST be after all variables are configured
+" colorscheme nord
+colorscheme dracula

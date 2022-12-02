@@ -1,0 +1,14 @@
+[alias]
+    sha = rev-parse HEAD
+    pretty = log --graph --pretty=oneline --abbrev-commit
+    oh = origin HEAD
+    m = master
+[branch]
+    autosetuprebase = always
+[pull]
+    rebase = preserve
+[diff]
+    renames = true
+[rebase]
+    autostash = true
+    stat = true
