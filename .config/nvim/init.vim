@@ -2,6 +2,7 @@ set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
 let g:python_host_prog = '~/venvs/neovim/bin/python2'
 let g:python3_host_prog = '~/venvs/neovim-py3/bin/python3.8'
+let g:black_virtualenv = '~/venvs/black'
 
 set nocompatible
 
@@ -114,6 +115,8 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_python_checkers = ['python', 'flake8']
 let g:syntastic_python_python_exec = 'python3'
 
+let g:black_linelength = 131
+
 """ Mappings
 let mapleader=","
 
@@ -125,6 +128,7 @@ map <F5> :w<CR>:!ipython "%"<CR>
 
 nmap <F7> :NERDTreeToggle<CR>
 nmap <F8> :TagbarToggle<CR>
+nmap <F9> :Black<CR>
 
 nnoremap <leader>s :<C-u>call gitblame#echo()<CR>
 
