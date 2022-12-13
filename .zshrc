@@ -52,6 +52,7 @@ fi
 
 # git aliases
 alias gitgraph='git log --graph --pretty=oneline --abbrev-commit '
+alias gs='git status'
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
