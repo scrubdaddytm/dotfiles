@@ -45,6 +45,8 @@ silent! if plug#begin()
     Plug 'deoplete-plugins/deoplete-jedi'
     Plug 'scrooloose/syntastic'
 
+    Plug 'psf/black', { 'branch': 'stable' }
+
     call plug#end()
 endif
 
