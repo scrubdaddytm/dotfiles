@@ -12,7 +12,7 @@ silent if empty(glob('"${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/
     silent! execute 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 endif
 
-silent! if plug#begin()
+silent! if plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
 

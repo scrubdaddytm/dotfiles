@@ -7,8 +7,13 @@
     autosetuprebase = always
 [pull]
     rebase = true
+[difftool]
+    prompt = true
 [diff]
     renames = true
+    tool = nvimdiff
+[difftool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [rebase]
     autostash = true
     stat = true
