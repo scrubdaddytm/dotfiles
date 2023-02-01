@@ -1,0 +1,28 @@
+#!/bin/sh
+echo "bootstrapping omz"
+
+export ZSH="$HOME/.oh-my-zsh"
+export ZSH_CUSTOM="$HOME/.zsh"
+export VIM_HOME="$HOME/.vim"
+export TMUX_HOME="$HOME/.tmux"
+
+clone_or_pull()
+{
+    REMOTE=$1
+    LOCAL=$2
+    if [ ! -d "$LOCAL" ]; then
+      git clone --depth=1 "$REMOTE" "$LOCAL"
+    else
+      cd "$LOCAL" || exit
+      git pull "$REMOTE"
+    fi
+}
+
+clone_or_pull https://github.com/robbyrussell/oh-my-zsh.git "$ZSH"
+clone_or_pull https://github.com/tmux-plugins/tpm "$TMUX_HOME/plugins/tpm"
+clone_or_pull https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+clone_or_pull https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
+clone_or_pull https://github.com/dracula/powerlevel10k.git "$ZSH_CUSTOM/themes/dracula-powerlevel10k"
+cp "$ZSH_CUSTOM/themes/dracula-powerlevel10k/files/.p10k.zsh" ~/.p10k.zsh
+
+echo "omz bootstrap complete"

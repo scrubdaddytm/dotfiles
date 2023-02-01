@@ -3,7 +3,14 @@ export ZSH_CUSTOM=$HOME/.zsh
 export VIM_HOME=$HOME/.vim
 export TMUX_HOME=$HOME/.tmux
 
-ZSH_THEME="powerlevel10k"
+if [[ ! -d "${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting" ]]; then
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
+fi
+if [[ ! -d "${ZSH_CUSTOM}/themes/powerlevel10k" ]]; then
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM}/themes/powerlevel10k
+  git clone https://github.com/dracula/powerlevel10k.git $ZSH_CUSTOM/themes/dracula-powerlevel10k
+  cp $ZSH_CUSTOM/themes/dracula-powerlevel10k/files/.p10k.zsh ~/.p10k.zsh
+fi
 
 plugins=(
   git
@@ -11,17 +18,17 @@ plugins=(
   history
   common-aliases
   colored-man-pages
-  zsh-syntax-highlighting
   history-substring-search
+  zsh-syntax-highlighting
 )
 
 files_to_source=(
-  "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-  "$ZSH_CUSTOM/themes/dracula-zsh-syntax-highlighting/zsh-syntax-highlighting.sh"
   "$ZSH/oh-my-zsh.sh"
+  "$ZSH_CUSTOM/themes/dracula-zsh-syntax-highlighting/zsh-syntax-highlighting.sh"
   "$HOME/.yelp-zsh-config"
   "$ZSH_CUSTOM/functions"
   "$ZSH_CUSTOM/yelp-functions" 
+  "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
   "$ZSH_CUSTOM/themes/powerlevel10k/powerlevel10k.zsh-theme"
 )
 
@@ -31,7 +38,7 @@ for file in "${files_to_source[@]}"; do
   fi
 done
 
-# User configuration
+export PATH="$HOME/bin:$PATH"
 
 autoload -Uz compinit
 compinit

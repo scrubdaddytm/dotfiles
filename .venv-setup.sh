@@ -1,10 +1,28 @@
-mkdir -p ~/venvs
+#!/bin/sh
 
-mkdir -p ~/venvs/neovim && virtualenv ~/venvs/neovim && . ~/venvs/neovim/bin/activate && pip install pynvim jedi
-mkdir -p ~/venvs/neovim-py3 && virtualenv ~/venvs/neovim-py3 -p python3.8 && . ~/venvs/neovim-py3/bin/activate && pip install pynvim jedi
-mkdir -p ~/venvs/jedi && virtualenv ~/venvs/jedi -p python3.8 && . ~/venvs/jedi/bin/activate && pip install jedi
-mkdir -p ~/venvs/black && virtualenv ~/venvs/black -p python3.8 && . ~/venvs/black/bin/activate && pip install black
+VENVS="$HOME/.venvs"
 
-mkdir -p ~/venvs/neovim-py311 && virtualenv ~/venvs/neovim-py311 -p python3.11 && . ~/venvs/neovim-py3/bin/activate && pip install pynvim jedi
-mkdir -p ~/venvs/jedi311 && virtualenv ~/venvs/jedi311 -p python3.11 && . ~/venvs/jedi/bin/activate && pip install jedi
-mkdir -p ~/venvs/black311 && virtualenv ~/venvs/black311 -p python3.11 && . ~/venvs/black/bin/activate && pip install black
+mkdir -p "$VENVS"
+
+PY_VERSION=$1
+
+if [ ! -f "/usr/bin/$PY_VERSION" ]; then
+    echo "invalid python version provided"
+    exit
+fi
+
+make_virtualenv()
+{
+    venv_name=$1; shift
+
+    venv_dir="$VENVS/$venv_name-$PY_VERSION"
+    mkdir -p "$venv_dir"
+    virtualenv "$venv_dir"
+    # shellcheck source=/dev/null
+    . "$venv_dir/bin/activate"
+    pip install "$@"
+}
+
+make_virtualenv neovim pynvim jedi
+make_virtualenv jedi jedi
+make_virtualenv black black
