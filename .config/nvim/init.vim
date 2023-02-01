@@ -1,8 +1,7 @@
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
-let g:python_host_prog = '~/venvs/neovim/bin/python2'
-let g:python3_host_prog = '~/venvs/neovim-py3/bin/python3.8'
-let g:black_virtualenv = '~/venvs/black'
+let g:python3_host_prog = '~/.venvs/neovim-python3/bin/python3'
+let g:black_virtualenv = '~/.venvs/black'
 
 set nocompatible
 
