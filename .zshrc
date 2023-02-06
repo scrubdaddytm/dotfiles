@@ -1,3 +1,7 @@
+if [[ "dpkg-query -W neofetch | awk {'print $1'} = """ ]]; then
+  neofetch
+fi
+
 export ZSH=$HOME/.oh-my-zsh
 export ZSH_CUSTOM=$HOME/.zsh
 export VIM_HOME=$HOME/.vim
@@ -77,7 +81,9 @@ if [[ "$system_type" = "Darwin" ]]; then
   eval "$(pyenv init -)"
 fi
 
-eval "$(aactivator init)"
+if [[ -f "aactivator" ]]; then
+  eval "$(aactivator init)"
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh

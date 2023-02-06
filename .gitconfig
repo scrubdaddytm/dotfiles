@@ -19,3 +19,6 @@
     stat = true
 [include]
     path = .gitconfig.local
+[user]
+    email = tucker@noia.me
+    name = tucker
