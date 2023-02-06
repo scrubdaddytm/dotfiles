@@ -17,8 +17,8 @@
 [rebase]
     autostash = true
     stat = true
-[include]
-    path = .gitconfig.local
 [user]
     email = tucker@noia.me
     name = tucker
+[include]
+    path = .gitconfig.local
