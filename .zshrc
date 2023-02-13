@@ -1,6 +1,5 @@
-if [[ "dpkg-query -W neofetch | awk {'print $1'} = """ ]]; then
-  neofetch
-fi
+export PATH="$HOME/bin:$PATH"
+neofetch
 
 export ZSH=$HOME/.oh-my-zsh
 export ZSH_CUSTOM=$HOME/.zsh
@@ -42,8 +41,6 @@ for file in "${files_to_source[@]}"; do
     source $file
   fi
 done
-
-export PATH="$HOME/bin:$PATH"
 
 autoload -Uz compinit
 compinit
