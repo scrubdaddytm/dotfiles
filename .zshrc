@@ -6,6 +6,7 @@ export ZSH=$HOME/.oh-my-zsh
 export ZSH_CUSTOM=$HOME/.zsh
 export VIM_HOME=$HOME/.vim
 export TMUX_HOME=$HOME/.tmux
+system_type=$(uname -s)
 
 if [[ ! -d "${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting" ]]; then
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
@@ -62,9 +63,32 @@ if [[ -n $TMUX ]]; then
   PROMPT_COMMAND='eval "$(/nail/scripts/tmux-env)"; '"$PROMPT_COMMAND"
 fi
 
+alias l='exa --group-directories-first --icons'
+alias la='l -a'
+alias lt='l -T'
+alias lta='l -Ta'
+alias lg='l --git --git-ignore'
+alias lga='lg -a'
+alias lgt='lg -T'
+alias lgta='lg -Ta'
+
+alias ll='exa -l --group-directories-first --icons'
+alias lla='ll -a'
+alias llt='ll -T'
+alias llta='ll -Ta'
+alias llg='ll --git --git-ignore'
+alias llga='llg -a'
+alias llgt='llg -T'
+alias llgta='llg -Ta'
+
+alias lgg='llga --no-permissions --no-filesize --no-user'
+alias lggt='lgg -T'
+
 # git aliases
-alias gitgraph='git log --graph --pretty=oneline --abbrev-commit '
-alias gs='git status'
+alias g=git
+alias gitgraph='g log --graph --pretty=oneline --abbrev-commit '
+alias gs='g status'
+alias gpoh='g push origin HEAD'
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
@@ -73,7 +97,6 @@ DEFAULT_USER=tucker
 
 # dracula fzf
 export FZF_DEFAULT_OPTS='--color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9 --color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4'
-system_type=$(uname -s)
 
 if [[ "$system_type" = "Darwin" ]]; then
   export PYENV_ROOT="$HOME/.pyenv"
