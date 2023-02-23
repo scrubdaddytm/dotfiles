@@ -18,11 +18,12 @@ clone_or_pull()
     fi
 }
 
-clone_or_pull https://github.com/robbyrussell/oh-my-zsh.git "$ZSH"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+mv ~/.zshrc.pre-oh-my-zsh ~/.zshrc
+
 clone_or_pull https://github.com/tmux-plugins/tpm "$TMUX_HOME/plugins/tpm"
 clone_or_pull https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 clone_or_pull https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
 clone_or_pull https://github.com/dracula/powerlevel10k.git "$ZSH_CUSTOM/themes/dracula-powerlevel10k"
-cp "$ZSH_CUSTOM/themes/dracula-powerlevel10k/files/.p10k.zsh" ~/.p10k.zsh
 
 echo "omz bootstrap complete"

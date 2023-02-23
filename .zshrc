@@ -6,6 +6,9 @@ export ZSH_CUSTOM=$HOME/.zsh
 export VIM_HOME=$HOME/.vim
 export TMUX_HOME=$HOME/.tmux
 system_type=$(uname -s)
+if [[ $(uname -r) =~ [Mm]icrosoft ]]; then
+  system_type="WSL"
+fi
 
 if [[ ! -d "${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting" ]]; then
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
@@ -96,14 +99,19 @@ DEFAULT_USER=tucker
 export FZF_DEFAULT_OPTS='--color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9 --color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4'
 
 if [[ "$system_type" = "Darwin" ]]; then
+
   export PYENV_ROOT="$HOME/.pyenv"
   command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
   eval "$(pyenv init -)"
+
+elif [[ "$system_type" = "WSL" ]]; then
+
+  eval ``keychain --eval --agents ssh id_ed25519
+
 fi
 
 if [[ -f "aactivator" ]]; then
   eval "$(aactivator init)"
 fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
