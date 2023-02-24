@@ -44,7 +44,8 @@ silent! if plug#begin('~/.vim/plugged')
 
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
     Plug 'deoplete-plugins/deoplete-jedi'
-    Plug 'scrooloose/syntastic'
+    " Plug 'scrooloose/syntastic'
+    Plug 'dense-analysis/ale'
 
     Plug 'psf/black', { 'branch': 'stable' }
 
@@ -102,20 +103,25 @@ autocmd BufNewFile,BufRead *.md set filetype=markdown
 abbr istrace import ipdb; ipdb.set_trace()
 abbr strace ipdb.set_trace()
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
 let g:deoplete#enable_at_startup = 1
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_python_checkers = ['python', 'flake8']
-let g:syntastic_python_python_exec = 'python3'
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_python_checkers = ['python', 'flake8']
+" let g:syntastic_python_python_exec = 'python3'
 
-let g:black_linelength = 131
+let b:ale_linters = {
+    \ 'python': ['black', 'flake8', 'autopep8', 'autoimport', 'mypy', 'reorder-python-imports'],
+    \ 'zsh': ['shell']
+\ }
+let g:ale_python_auto_virtualenv = 1
+let g:ale_python_auto_poetry = 1
 
 """ Mappings
 let mapleader=","

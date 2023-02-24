@@ -20,9 +20,15 @@ if [[ ! -d "${ZSH_CUSTOM}/themes/powerlevel10k" ]]; then
 fi
 
 plugins=(
+  fzf
   git
   pip
+  sudo
+  python
   history
+  ripgrep
+  pre-commit
+  virtualenv
   common-aliases
   colored-man-pages
   history-substring-search
