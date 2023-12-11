@@ -121,6 +121,11 @@ let g:ale_linters = {
 let g:ale_fixers = {
 \    'python': ['black', 'autopep8', 'autoimport', 'reorder-python-imports'],
 \}
+if has('macunix')
+    let g:python_mypy_options = '--python-version 3.11'
+else
+    let g:python_mypy_options = '--python-version 3.10'
+endif
 
 """ Mappings
 let mapleader=","
