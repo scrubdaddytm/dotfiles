@@ -23,6 +23,4 @@ make_virtualenv()
     pip install "$@"
 }
 
-make_virtualenv neovim pynvim jedi
-make_virtualenv jedi jedi
-make_virtualenv black black
+make_virtualenv neovim pynvim jedi black mypy flake8
