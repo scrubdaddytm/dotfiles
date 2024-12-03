@@ -2,8 +2,8 @@ set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
 
 if has('macunix')
-    let g:python3_host_prog = '/Users/tucker/.pyenv/versions/neovim3/bin/python'
-    let g:black_virtualenv = '/Users/tucker/.pyenv/versions/neovim3'
+    let g:python3_host_prog = '/Users/tucker/.pyenv/versions/3.13.0/bin/python'
+    let g:black_virtualenv = '/Users/tucker/.pyenv/versions/3.13.0'
 else
     let g:python3_host_prog = '~/.venvs/neovim-python3/bin/python3'
     let g:black_virtualenv = '~/.venvs/neovim-python3'
@@ -53,6 +53,9 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'dense-analysis/ale'
 
     Plug 'psf/black', { 'branch': 'stable' }
+
+    Plug 'echasnovski/mini.nvim', { 'branch': 'stable' }
+    Plug 'nvim-tree/nvim-web-devicons'
 
     call plug#end()
 endif

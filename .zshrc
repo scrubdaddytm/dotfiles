@@ -26,13 +26,12 @@ plugins=(
   sudo
   python
   history
-  ripgrep
   pre-commit
   virtualenv
   common-aliases
   colored-man-pages
-  history-substring-search
   zsh-syntax-highlighting
+  history-substring-search
 )
 
 files_to_source=(
@@ -69,7 +68,7 @@ if [[ -n $TMUX ]]; then
   PROMPT_COMMAND='eval "$(/nail/scripts/tmux-env)"; '"$PROMPT_COMMAND"
 fi
 
-alias l='exa --group-directories-first --icons'
+alias l='eza --group-directories-first --icons'
 alias la='l -a'
 alias lt='l -T'
 alias lta='l -Ta'
@@ -78,7 +77,7 @@ alias lga='lg -a'
 alias lgt='lg -T'
 alias lgta='lg -Ta'
 
-alias ll='exa -l --group-directories-first --icons'
+alias ll='eza -l --group-directories-first --icons'
 alias lla='ll -a'
 alias llt='ll -T'
 alias llta='ll -Ta'
@@ -109,6 +108,8 @@ if [[ "$system_type" = "Darwin" ]]; then
   export PYENV_ROOT="$HOME/.pyenv"
   command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
   eval "$(pyenv init -)"
+
+  export PATH=/opt/homebrew/bin:$PATH
 
 elif [[ "$system_type" = "WSL" ]]; then
 

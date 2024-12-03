@@ -1,0 +1,48 @@
+#!/usr/bin/env sh
+
+function setup_space {
+  local idx="$1"
+  local name="$2"
+  local space=
+  echo "setup space $idx : $name"
+
+  space=$(yabai -m query --spaces --space "$idx")
+  if [ -z "$space" ]; then
+    yabai -m space --create
+  fi
+
+  yabai -m space "$idx" --label "$name"
+}
+
+# Scripting Addition requirement
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+sudo yabai --load-sa
+
+yabai -m config                                 \
+    top_padding                 5               \
+    bottom_padding              5               \
+    left_padding                5               \
+    right_padding               5               \
+    window_gap                  5               \
+    focus_follows_mouse         autofocus       \
+    mouse_follows_focus         on              \
+    layout                      bsp
+
+setup_space 1 spotify
+setup_space 2 terminal
+setup_space 3 browser
+setup_space 4 communication
+
+yabai -m rule --add app="^Spotify$" space=1
+yabai -m rule --add app="^iTerm2$" space=2
+yabai -m rule --add app="^Brave Browser$" space=3
+yabai -m rule --add app="^Messages$" space=4
+yabai -m rule --add app="^Discord$" space=4
+
+# Applications that should float, maybe with a default start-location
+yabai -m rule --add app="^FaceTime$" manage=off
+yabai -m rule --add app="^System Settings$" manage=off grid=7:7:1:1:5:5
+yabai -m rule --add app="^Notes$" manage=off grid=7:7:1:1:5:5
+yabai -m rule --add app="^Finder$" manage=off grid=7:7:1:1:5:5
+
+echo "yabai configuration loaded..."
