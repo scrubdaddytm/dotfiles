@@ -39,7 +39,7 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-sleuth'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-obsession'
-    Plug 'sjl/gundo.vim'
+    Plug 'mbbill/undotree'
 
     Plug 'folke/which-key.nvim'
 
@@ -115,15 +115,18 @@ let g:deoplete#enable_at_startup = 1
 
 let g:ale_python_auto_virtualenv = 1
 let g:ale_python_auto_poetry = 1
-let g:ale_python_flake8_options = '--max-line-length=88'
+let g:ale_python_flake8_options = '--max-line-length=100'
 let g:ale_fix_on_save = 1
 let g:ale_linters = {
-\   'python': ['black', 'flake8', 'autopep8', 'autoimport', 'mypy', 'reorder-python-imports'],
+\   'python': ['flake8', 'mypy', 'pyright'],
 \   'zsh': ['shell']
 \}
+
 let g:ale_fixers = {
-\    'python': ['black', 'autopep8', 'autoimport', 'reorder-python-imports'],
+\    'python': ['black', 'autopep8', 'isort'],
+\    '*': ['remove_trailing_lines', 'trim_whitespace'],
 \}
+
 if has('macunix')
     let g:python_mypy_options = '--python-version 3.11'
 else
@@ -152,11 +155,6 @@ nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap <leader>rws :%s/\s\+$//<cr>:let @/=''<CR>
 
-" Pane navigation
-noremap <C-J> <C-W>j<C-W>_
-noremap <C-K> <C-W>k<C-W>_
-noremap <C-H> <C-W>h<C-W>_
-noremap <C-L> <C-W>l<C-W>_
 
 " FZF
 nnoremap <leader>f :FZF<cr>

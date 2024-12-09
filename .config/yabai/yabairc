@@ -44,5 +44,6 @@ yabai -m rule --add app="^FaceTime$" manage=off
 yabai -m rule --add app="^System Settings$" manage=off grid=7:7:1:1:5:5
 yabai -m rule --add app="^Notes$" manage=off grid=7:7:1:1:5:5
 yabai -m rule --add app="^Finder$" manage=off grid=7:7:1:1:5:5
+yabai -m rule --add app="^Activity Monitor$" manage=off grid=7:7:1:1:5:5
 
 echo "yabai configuration loaded..."
