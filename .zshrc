@@ -39,7 +39,7 @@ files_to_source=(
   "$ZSH_CUSTOM/themes/dracula-zsh-syntax-highlighting/zsh-syntax-highlighting.sh"
   "$HOME/.yelp-zsh-config"
   "$ZSH_CUSTOM/functions"
-  "$ZSH_CUSTOM/yelp-functions" 
+  "$ZSH_CUSTOM/yelp-functions"
   "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
   "$ZSH_CUSTOM/themes/powerlevel10k/powerlevel10k.zsh-theme"
 )

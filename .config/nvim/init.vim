@@ -23,6 +23,7 @@ silent! if plug#begin('~/.vim/plugged')
 
     Plug 'preservim/nerdtree'
     Plug 'preservim/tagbar'
+    Plug 'OXY2DEV/markview.nvim'
 
     Plug 'airblade/vim-gitgutter'
     Plug 'zivyangll/git-blame.vim'
@@ -57,6 +58,8 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'echasnovski/mini.nvim', { 'branch': 'stable' }
     Plug 'nvim-tree/nvim-web-devicons'
 
+    Plug 'github/copilot.vim'
+
     call plug#end()
 endif
 
@@ -65,7 +68,7 @@ set encoding=utf8
 set hidden
 set visualbell
 set clipboard=unnamed
-" Enable persistent undo so that undo history persists across vim sessions
+"" Enable persistent undo so that undo history persists across vim sessions
 set undofile
 set undodir=~/.vim/undo
 
@@ -129,11 +132,15 @@ let g:ale_fixers = {
 
 if has('macunix')
     let g:python_mypy_options = '--python-version 3.11'
+    let g:black_target_version = "3.11"
+    let g:ale_python_black_options='--line-length=131 --target-version py311'
 else
     let g:python_mypy_options = '--python-version 3.10'
+    let g:black_target_version = "3.10"
+    let g:ale_python_black_options='--line-length=131 --target-version py310'
 endif
 
-""" Mappings
+"" Mappings
 let mapleader=","
 
 "" All mode mappings
@@ -151,12 +158,12 @@ nnoremap <leader>s :<C-u>call gitblame#echo()<CR>
 "" Normal mode mappings
 nmap <space> viw
 nnoremap <F2> :set invpaste paste?<CR>
-nnoremap <Tab> :bnext<CR>
-nnoremap <S-Tab> :bprevious<CR>
+"" nnoremap <Tab> :bnext<CR>
+"" nnoremap <S-Tab> :bprevious<CR>
 nnoremap <leader>rws :%s/\s\+$//<cr>:let @/=''<CR>
 
 
-" FZF
+"" FZF
 nnoremap <leader>f :FZF<cr>
 
 "" Visual mode mappings
