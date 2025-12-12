@@ -1,12 +1,19 @@
 #!/bin/sh
 
-# install homebrew if it's missing
+set -e
+
 if ! command -v brew >/dev/null 2>&1; then
-  echo "Installing homebrew"
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  echo "Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+  if [[ $(uname -m) == "arm64" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  else
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
 fi
 
 if [ -f "$HOME/.Brewfile" ]; then
-  echo "Updating homebrew bundle"
+  echo "Installing Homebrew bundle..."
   brew bundle --global
 fi
