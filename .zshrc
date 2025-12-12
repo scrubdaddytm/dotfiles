@@ -1,5 +1,8 @@
 export PATH="$HOME/bin:$PATH"
-neofetch
+
+if [[ -o login ]] && [[ -o interactive ]]; then
+  neofetch
+fi
 
 export ZSH=$HOME/.oh-my-zsh
 export ZSH_CUSTOM=$HOME/.zsh
@@ -8,15 +11,6 @@ export TMUX_HOME=$HOME/.tmux
 system_type=$(uname -s)
 if [[ $(uname -r) =~ [Mm]icrosoft ]]; then
   system_type="WSL"
-fi
-
-if [[ ! -d "${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting" ]]; then
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
-fi
-if [[ ! -d "${ZSH_CUSTOM}/themes/powerlevel10k" ]]; then
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM}/themes/powerlevel10k
-  git clone https://github.com/dracula/powerlevel10k.git $ZSH_CUSTOM/themes/dracula-powerlevel10k
-  cp $ZSH_CUSTOM/themes/dracula-powerlevel10k/files/.p10k.zsh ~/.p10k.zsh
 fi
 
 plugins=(
@@ -45,13 +39,17 @@ files_to_source=(
 )
 
 for file in "${files_to_source[@]}"; do
-  if [[ -r $file ]]; then
-    source $file
+  if [[ -r "$file" ]]; then
+    source "$file"
   fi
 done
 
 autoload -Uz compinit
-compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 autoload bashcompinit
 bashcompinit
@@ -64,9 +62,7 @@ alias vim=nvim
 alias vi=nvim
 alias vimdiff='nvim -d'
 
-if [[ -n $TMUX ]]; then
-  PROMPT_COMMAND='eval "$(/nail/scripts/tmux-env)"; '"$PROMPT_COMMAND"
-fi
+command -v eza >/dev/null || alias eza='exa'
 
 alias l='eza --group-directories-first --icons'
 alias la='l -a'
@@ -103,6 +99,8 @@ DEFAULT_USER=tucker
 # dracula fzf
 export FZF_DEFAULT_OPTS='--color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9 --color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4'
 
+export PATH="$HOME/.local/bin":$PATH
+
 if [[ "$system_type" = "Darwin" ]]; then
 
   export PYENV_ROOT="$HOME/.pyenv"
@@ -113,12 +111,8 @@ if [[ "$system_type" = "Darwin" ]]; then
 
 elif [[ "$system_type" = "WSL" ]]; then
 
-  eval ``keychain --eval --agents ssh id_ed25519
+  eval "$(keychain --eval --agents ssh id_ed25519)"
 
-fi
-
-if [[ -f "aactivator" ]]; then
-  eval "$(aactivator init)"
 fi
 
 if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]; then
@@ -126,4 +120,8 @@ if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]
     export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
 fi
 
-[[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
+if command -v aactivator >/dev/null; then
+  eval "$(aactivator init)"
+fi
+
+[[ ! -f "$HOME/.p10k.zsh" ]] || source "$HOME/.p10k.zsh"
