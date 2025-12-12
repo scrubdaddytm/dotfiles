@@ -21,6 +21,7 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf.vim'
 
     Plug 'nvim-tree/nvim-tree.lua'
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'preservim/tagbar'
     Plug 'OXY2DEV/markview.nvim'
 
@@ -175,6 +176,15 @@ lua << EOF
       group_empty = true,
     },
   })
+
+  local has_treesitter, treesitter = pcall(require, 'nvim-treesitter.configs')
+  if has_treesitter then
+    treesitter.setup({
+      ensure_installed = { "python", "lua", "vim", "vimdoc" },
+      highlight = { enable = true },
+      indent = { enable = true },
+    })
+  end
 
   require("mason").setup()
   require("mason-lspconfig").setup({
