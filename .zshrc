@@ -1,16 +1,32 @@
-export PATH="$HOME/bin:$PATH"
-
-if [[ -o login ]] && [[ -o interactive ]]; then
-  neofetch
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+system_type=$(uname -s)
+if [[ $(uname -r) =~ [Mm]icrosoft ]]; then
+  system_type="WSL"
+fi
+
+export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+if [[ "$system_type" = "Darwin" ]]; then
+  export PATH="/opt/homebrew/bin:$PATH"
+  export PYENV_ROOT="$HOME/.pyenv"
+  command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+fi
+
+export LANG=en_US.UTF-8
+export EDITOR='nvim'
+export DEFAULT_USER=tucker
 
 export ZSH=$HOME/.oh-my-zsh
 export ZSH_CUSTOM=$HOME/.zsh
 export VIM_HOME=$HOME/.vim
 export TMUX_HOME=$HOME/.tmux
-system_type=$(uname -s)
-if [[ $(uname -r) =~ [Mm]icrosoft ]]; then
-  system_type="WSL"
+
+if [[ -o login ]] && [[ -o interactive ]]; then
+  neofetch
 fi
 
 plugins=(
@@ -34,7 +50,6 @@ files_to_source=(
   "$HOME/.yelp-zsh-config"
   "$ZSH_CUSTOM/functions"
   "$ZSH_CUSTOM/yelp-functions"
-  "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
   "$ZSH_CUSTOM/themes/powerlevel10k/powerlevel10k.zsh-theme"
 )
 
@@ -53,10 +68,6 @@ fi
 
 autoload bashcompinit
 bashcompinit
-
-export LANG=en_US.UTF-8
-
-export EDITOR='nvim'
 
 alias vim=nvim
 alias vi=nvim
@@ -94,25 +105,10 @@ alias gpoh='g push origin HEAD'
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
-DEFAULT_USER=tucker
-
-# dracula fzf
-export FZF_DEFAULT_OPTS='--color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9 --color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4'
-
-export PATH="$HOME/.local/bin":$PATH
-
 if [[ "$system_type" = "Darwin" ]]; then
-
-  export PYENV_ROOT="$HOME/.pyenv"
-  command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
   eval "$(pyenv init -)"
-
-  export PATH=/opt/homebrew/bin:$PATH
-
 elif [[ "$system_type" = "WSL" ]]; then
-
   eval "$(keychain --eval --agents ssh id_ed25519)"
-
 fi
 
 if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]; then
