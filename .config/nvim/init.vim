@@ -125,6 +125,14 @@ autocmd BufNewFile,BufRead *.md set filetype=markdown
 abbr istrace import ipdb; ipdb.set_trace()
 abbr strace ipdb.set_trace()
 
+if exists('*copilot#Accept')
+  imap <silent><script><expr> <C-y> copilot#Accept("\<CR>")
+  let g:copilot_no_tab_map = v:true
+  imap <C-]> <Plug>(copilot-next)
+  imap <C-[> <Plug>(copilot-previous)
+  imap <C-\> <Plug>(copilot-dismiss)
+endif
+
 "" Mappings
 let mapleader=","
 
