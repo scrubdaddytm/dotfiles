@@ -62,6 +62,9 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.hlsearch = true
 
+-- Update time for CursorHold events (affects diagnostic popup delay)
+vim.opt.updatetime = 300
+
 -- Splits
 vim.opt.splitbelow = true
 vim.opt.splitright = true
@@ -117,7 +120,7 @@ Plug('junegunn/fzf.vim')
 
 Plug('nvim-tree/nvim-tree.lua')
 Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' })
-Plug('preservim/tagbar')
+Plug('stevearc/aerial.nvim')
 Plug('OXY2DEV/markview.nvim')
 
 Plug('airblade/vim-gitgutter')
@@ -185,10 +188,9 @@ local opts = { noremap = true, silent = true }
 
 -- All mode mappings (not just normal mode)
 keymap('', '<leader>W', ':w !sudo tee % > /dev/null<CR>', opts)
-keymap('', '<F12>', ':!ctags -L <(find . -name \'*.py\') --fields=+iaS --python-kinds=-i --sort=yes --extra=+q<CR>', opts)
 keymap('', '<F5>', ':w<CR>:!ipython "%"<CR>', { noremap = false })
 keymap('n', '<F7>', ':NvimTreeToggle<CR>', opts)
-keymap('n', '<F8>', ':TagbarToggle<CR>', opts)
+keymap('n', '<F8>', '<cmd>AerialToggle<CR>', opts)
 keymap('n', '<F9>', ':Black<CR>', opts)
 keymap('n', '<leader>s', ':<C-u>call gitblame#echo()<CR>', opts)
 keymap('n', '<space>', 'viw', { noremap = false })
@@ -210,6 +212,17 @@ require('nvim-tree').setup({
 	renderer = {
 		group_empty = true,
 	},
+})
+
+require('aerial').setup({
+	backends = { 'lsp', 'treesitter' },
+	layout = {
+		default_direction = 'prefer_right',
+	},
+	on_attach = function(bufnr)
+		vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr })
+		vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr })
+	end,
 })
 
 local has_treesitter, treesitter = pcall(require, 'nvim-treesitter.configs')
@@ -260,6 +273,21 @@ null_ls.setup({
 		}),
 		null_ls.builtins.formatting.isort,
 	},
+})
+
+-- Diagnostic configuration
+vim.diagnostic.config({
+	float = {
+		source = 'always',
+		border = 'rounded',
+	},
+})
+
+-- Show diagnostics on hover
+vim.api.nvim_create_autocmd('CursorHold', {
+	callback = function()
+		vim.diagnostic.open_float(nil, { focusable = false })
+	end,
 })
 
 -- LSP keybindings
