@@ -1,14 +1,5 @@
 REPOS_DIR=$HOME/pg
 
-session () {
-    SESSIONS=$(tmux list-sessions -F "#{session_name}")
-    SELECTED_SESSION=$(echo "$SESSIONS" | fzf)
-
-    if [[ -n "$SELECTED_SESSION" ]]; then
-        tmux switch -t $SELECTED_SESSION
-    fi
-}
-
 repo () {
     REPOS=$(find $REPOS_DIR -type d -exec test -d '{}/.git' \; -prune -print;)
     SELECTED_REPO=$(echo "$REPOS" | sed "s,$REPOS_DIR/,," | fzf)
