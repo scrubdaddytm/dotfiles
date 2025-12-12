@@ -3,7 +3,6 @@ echo "bootstrapping omz"
 
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_CUSTOM="$HOME/.zsh"
-export VIM_HOME="$HOME/.vim"
 export TMUX_HOME="$HOME/.tmux"
 
 clone_or_pull()
@@ -13,18 +12,21 @@ clone_or_pull()
     if [ ! -d "$LOCAL" ]; then
       git clone --depth=1 "$REMOTE" "$LOCAL"
     else
-      cd "$LOCAL" || exit
-      git pull "$REMOTE"
+      (cd "$LOCAL" && git fetch && git reset --hard @{u})
     fi
 }
 
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-mv ~/.zshrc.pre-oh-my-zsh ~/.zshrc
+if [ ! -d "$ZSH" ]; then
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || exit 1
+fi
+
+if [ -f ~/.zshrc.pre-oh-my-zsh ]; then
+  mv ~/.zshrc.pre-oh-my-zsh ~/.zshrc
+fi
 
 clone_or_pull https://github.com/tmux-plugins/tpm "$TMUX_HOME/plugins/tpm"
 clone_or_pull https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 clone_or_pull https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
-clone_or_pull https://github.com/dracula/powerlevel10k.git "$ZSH_CUSTOM/themes/dracula-powerlevel10k"
 
 if hostname -f | grep -q "yelpcorp"; then
   git config --global user.email "tucker@yelp.com"

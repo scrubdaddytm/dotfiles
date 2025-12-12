@@ -46,7 +46,7 @@ plugins=(
 
 files_to_source=(
   "$ZSH/oh-my-zsh.sh"
-  "$ZSH_CUSTOM/themes/dracula-zsh-syntax-highlighting/zsh-syntax-highlighting.sh"
+  "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
   "$HOME/.yelp-zsh-config"
   "$ZSH_CUSTOM/functions"
   "$ZSH_CUSTOM/yelp-functions"
