@@ -1,3 +1,5 @@
 __pycache__
 .DS_Store
 .python-version
+
+**/.claude/settings.local.json

@@ -1,24 +1,27 @@
 [alias]
-    sha = rev-parse HEAD
-    pretty = log --graph --pretty=oneline --abbrev-commit
-    oh = origin HEAD
-    m = master
+	sha = rev-parse HEAD
+	pretty = log --graph --pretty=oneline --abbrev-commit
+	oh = origin HEAD
+	m = master
 [branch]
-    autosetuprebase = always
+	autosetuprebase = always
+	sort = -committerdate
 [pull]
-    rebase = true
+	rebase = true
 [difftool]
-    prompt = true
+	prompt = false
 [diff]
-    renames = true
-    tool = nvimdiff
+	renames = true
+	tool = nvimdiff
 [difftool "nvimdiff"]
-    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+	cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [rebase]
-    autostash = true
-    stat = true
+	autostash = true
+	stat = true
 [user]
-    email = tucker@noia.me
-    name = tucker
+	email = tucker@noia.me
+	name = tucker
 [include]
-    path = .gitconfig.local
+	path = .gitconfig.local
+[column]
+	ui = auto

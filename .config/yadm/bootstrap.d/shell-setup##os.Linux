@@ -26,4 +26,9 @@ clone_or_pull https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUS
 clone_or_pull https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
 clone_or_pull https://github.com/dracula/powerlevel10k.git "$ZSH_CUSTOM/themes/dracula-powerlevel10k"
 
+if hostname -f | grep -q "yelpcorp"; then
+  git config --global user.email "tucker@yelp.com"
+  echo "Configured git with tucker@yelp.com (Yelp host)"
+fi
+
 echo "omz bootstrap complete"
