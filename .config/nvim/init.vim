@@ -1,15 +1,19 @@
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
 
-let g:python3_host_prog = '~/.venvs/neovim-python3/bin/python3'
-let g:black_virtualenv = '~/.venvs/neovim-python3'
+let g:neovim_python3_venv = expand('~/.venvs/neovim-python3')
+let g:python3_host_prog = g:neovim_python3_venv . '/bin/python3'
+let g:black_virtualenv = g:neovim_python3_venv
 
-set nocompatible
+if !isdirectory(g:neovim_python3_venv)
+  echom 'Creating neovim Python virtualenv...'
+  execute '!~/.venv-setup.sh'
+endif
 
-set rtp+=/usr/bin/fzf
-
-silent if empty(glob('"${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim'))
-    silent! execute 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 silent! if plug#begin('~/.vim/plugged')
@@ -31,7 +35,6 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'mg979/vim-visual-multi'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-repeat'
-    Plug 'tpope/vim-sensible'
     Plug 'tpope/vim-sleuth'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-obsession'
@@ -67,7 +70,10 @@ set visualbell
 set clipboard=unnamed
 "" Enable persistent undo so that undo history persists across vim sessions
 set undofile
-set undodir=~/.vim/undo
+let &undodir = expand('~/.vim/undo')
+if !isdirectory(&undodir)
+  call mkdir(&undodir, 'p')
+endif
 
 "" Spaces >>>> tabs
 set expandtab
@@ -93,8 +99,6 @@ set ignorecase
 set smartcase
 
 set hlsearch
-
-set showmode
 
 set splitbelow
 set splitright
@@ -127,21 +131,12 @@ let g:ale_fixers = {
 \    '*': ['remove_trailing_lines', 'trim_whitespace'],
 \}
 
-if has('macunix')
-    let g:python_mypy_options = '--python-version 3.12'
-    let g:black_target_version = "3.12"
-    let g:ale_python_black_options='--line-length=131 --target-version py312'
-else
-    let g:python_mypy_options = '--python-version 3.10'
-    let g:black_target_version = "3.10"
-    let g:ale_python_black_options='--line-length=131 --target-version py310'
-endif
+let g:ale_python_black_options='--line-length=131'
 
 "" Mappings
 let mapleader=","
 
 "" All mode mappings
-map ; :
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
 noremap <f12> :!ctags -L <(find . -name '*.py') --fields=+iaS --python-kinds=-i --sort=yes --extra=+q<cr>
 map <F5> :w<CR>:!ipython "%"<CR>
@@ -155,8 +150,6 @@ nnoremap <leader>s :<C-u>call gitblame#echo()<CR>
 "" Normal mode mappings
 nmap <space> viw
 nnoremap <F2> :set invpaste paste?<CR>
-"" nnoremap <Tab> :bnext<CR>
-"" nnoremap <S-Tab> :bprevious<CR>
 nnoremap <leader>rws :%s/\s\+$//<cr>:let @/=''<CR>
 
 
@@ -171,9 +164,6 @@ vmap <leader>p :w !fpb -<cr>
 
 "" Insert mode mappings
 inoremap jk <esc>
-inoremap jj <esc>
-inoremap kj <esc>
-inoremap ;; <esc>
 
 "" UI
 set list
