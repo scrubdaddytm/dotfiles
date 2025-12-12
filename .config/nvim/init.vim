@@ -29,7 +29,6 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-fugitive'
     Plug 'rhysd/committia.vim'
 
-    Plug 'airblade/vim-rooter'
     Plug 'christoomey/vim-tmux-navigator'
 
     Plug 'mg979/vim-visual-multi'
