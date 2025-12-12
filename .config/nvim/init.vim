@@ -1,13 +1,8 @@
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
 
-if has('macunix')
-    let g:python3_host_prog = '/Users/tucker/.pyenv/versions/3.13.0/bin/python'
-    let g:black_virtualenv = '/Users/tucker/.pyenv/versions/3.13.0'
-else
-    let g:python3_host_prog = '~/.venvs/neovim-python3/bin/python3'
-    let g:black_virtualenv = '~/.venvs/neovim-python3'
-endif
+let g:python3_host_prog = '~/.venvs/neovim-python3/bin/python3'
+let g:black_virtualenv = '~/.venvs/neovim-python3'
 
 set nocompatible
 
@@ -59,6 +54,8 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'nvim-tree/nvim-web-devicons'
 
     Plug 'github/copilot.vim'
+
+    Plug 'arcticicestudio/nord-vim', { 'branch': 'main' }
 
     call plug#end()
 endif
@@ -131,9 +128,9 @@ let g:ale_fixers = {
 \}
 
 if has('macunix')
-    let g:python_mypy_options = '--python-version 3.11'
-    let g:black_target_version = "3.11"
-    let g:ale_python_black_options='--line-length=131 --target-version py311'
+    let g:python_mypy_options = '--python-version 3.12'
+    let g:black_target_version = "3.12"
+    let g:ale_python_black_options='--line-length=131 --target-version py312'
 else
     let g:python_mypy_options = '--python-version 3.10'
     let g:black_target_version = "3.10"
@@ -193,4 +190,4 @@ lua << EOF
 EOF
 
 "" MUST be after all variables are configured
-colorscheme dracula
+colorscheme nord

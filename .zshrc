@@ -121,4 +121,9 @@ if [[ -f "aactivator" ]]; then
   eval "$(aactivator init)"
 fi
 
+if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]; then
+    ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
+    export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+fi
+
 [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh

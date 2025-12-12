@@ -17,7 +17,7 @@ make_virtualenv()
 
     venv_dir="$VENVS/$venv_name-$PY_VERSION"
     mkdir -p "$venv_dir"
-    virtualenv "$venv_dir"
+    $PY_VERSION -m venv "$venv_dir"
     # shellcheck source=/dev/null
     . "$venv_dir/bin/activate"
     pip install "$@"
