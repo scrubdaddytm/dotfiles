@@ -6,7 +6,6 @@ VENVS="$HOME/.venvs"
 mkdir -p "$VENVS"
 echo "[venv-setup] Venvs directory: $VENVS"
 
-# Detect Python 3 automatically
 if command -v python3 >/dev/null 2>&1; then
     PYTHON_BIN="python3"
     echo "[venv-setup] Found Python: $PYTHON_BIN"

@@ -96,7 +96,6 @@ alias llgta='llg -Ta'
 alias lgg='llga --no-permissions --no-filesize --no-user'
 alias lggt='lgg -T'
 
-# git aliases
 alias g=git
 alias gitgraph='g log --graph --pretty=oneline --abbrev-commit '
 alias gs='g status'

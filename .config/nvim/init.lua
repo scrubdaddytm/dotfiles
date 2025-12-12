@@ -1,11 +1,7 @@
--- Neovim configuration in Lua
-
--- Runtime path compatibility with vim
 vim.opt.runtimepath:prepend('~/.vim')
 vim.opt.runtimepath:append('~/.vim/after')
 vim.opt.packpath = vim.opt.runtimepath:get()
 
--- vim-plug setup
 vim.g.neovim_python3_venv = vim.fn.expand('~/.venvs/neovim-python3')
 vim.g.python3_host_prog = vim.g.neovim_python3_venv .. '/bin/python3'
 vim.g.black_virtualenv = vim.g.neovim_python3_venv
@@ -24,13 +20,11 @@ if vim.fn.empty(vim.fn.glob(data_dir .. '/autoload/plug.vim')) > 0 then
     vim.cmd('autocmd VimEnter * PlugInstall --sync | source $MYVIMRC')
 end
 
--- Basic settings
 vim.opt.encoding = 'utf8'
 vim.opt.hidden = true
 vim.opt.visualbell = true
 vim.opt.clipboard = 'unnamed'
 
--- Persistent undo
 vim.opt.undofile = true
 local undodir = vim.fn.expand('~/.vim/undo')
 vim.opt.undodir = undodir
@@ -38,18 +32,15 @@ if vim.fn.isdirectory(undodir) == 0 then
     vim.fn.mkdir(undodir, 'p')
 end
 
--- Tabs and indentation
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 
--- Filetype detection
 vim.cmd('filetype on')
 vim.cmd('filetype indent on')
 vim.cmd('filetype plugin on')
 
--- UI settings
 vim.opt.number = true
 vim.opt.lazyredraw = true
 vim.opt.linebreak = true
@@ -57,24 +48,19 @@ vim.opt.showmatch = true
 vim.opt.cursorline = true
 vim.opt.showcmd = true
 
--- Searching
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.hlsearch = true
 
--- Update time for CursorHold events (affects diagnostic popup delay)
 vim.opt.updatetime = 300
 
--- Splits
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 
--- No swap files
 vim.opt.backup = false
 vim.opt.swapfile = false
 vim.opt.writebackup = false
 
--- List chars
 vim.opt.list = true
 vim.opt.listchars = {
     tab = '→~',
@@ -86,14 +72,12 @@ vim.opt.listchars = {
 
 vim.opt.termguicolors = true
 
--- Filetype settings
 vim.filetype.add({
     extension = {
         md = 'markdown',
     }
 })
 
--- Filetype-specific indentation
 vim.api.nvim_create_autocmd('FileType', {
     pattern = {'yaml', 'lua'},
     callback = function()
@@ -102,16 +86,13 @@ vim.api.nvim_create_autocmd('FileType', {
     end
 })
 
--- Abbreviations
 vim.cmd([[
 abbr istrace import ipdb; ipdb.set_trace()
 abbr strace ipdb.set_trace()
 ]])
 
--- Leader key
 vim.g.mapleader = ','
 
--- Plugins
 local Plug = vim.fn['plug#']
 vim.call('plug#begin', '~/.vim/plugged')
 
@@ -182,7 +163,6 @@ vim.cmd([[
   augroup END
 ]])
 
--- Copilot settings (only if available)
 if vim.fn.exists('*copilot#Accept') == 1 then
     vim.keymap.set('i', '<C-y>', 'copilot#Accept("\\<CR>")', { expr = true, silent = true, script = true })
     vim.g.copilot_no_tab_map = true
@@ -191,13 +171,12 @@ if vim.fn.exists('*copilot#Accept') == 1 then
     vim.keymap.set('i', '<C-\\>', '<Plug>(copilot-dismiss)')
 end
 
--- Keybindings
 local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
--- All mode mappings (not just normal mode)
 keymap('', '<leader>W', ':w !sudo tee % > /dev/null<CR>', opts)
 keymap('', '<F5>', ':w<CR>:!ipython "%"<CR>', { noremap = false })
+
 keymap('n', '<F7>', ':NvimTreeToggle<CR>', opts)
 keymap('n', '<F8>', '<cmd>AerialToggle<CR>', opts)
 keymap('n', '<F9>', ':Black<CR>', opts)
@@ -207,14 +186,11 @@ keymap('n', '<F2>', ':set invpaste paste?<CR>', opts)
 keymap('n', '<leader>rws', ':%s/\\s\\+$//<CR>:let @/=""<CR>', opts)
 keymap('n', '<leader>f', ':FZF<CR>', opts)
 
--- Visual mode
 keymap('v', '//', 'y/<C-R>"<CR>', opts)
 keymap('v', '<leader>p', ':w !fpb -<CR>', { noremap = false })
 
--- Insert mode
 keymap('i', 'jk', '<Esc>', opts)
 
--- Plugin configurations
 require('which-key').setup()
 
 require('nvim-tree').setup({
@@ -284,7 +260,6 @@ null_ls.setup({
     },
 })
 
--- Diagnostic configuration
 vim.diagnostic.config({
     float = {
         source = 'always',
@@ -292,14 +267,12 @@ vim.diagnostic.config({
     },
 })
 
--- Show diagnostics on hover
 vim.api.nvim_create_autocmd('CursorHold', {
     callback = function()
         vim.diagnostic.open_float(nil, { focusable = false })
     end,
 })
 
--- LSP keybindings
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local bufmap = function(mode, lhs, rhs)
@@ -314,7 +287,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
--- nvim-cmp setup
 local cmp = require('cmp')
 local luasnip = require('luasnip')
 
@@ -358,7 +330,6 @@ cmp.setup({
     })
 })
 
--- Command-line completion
 cmp.setup.cmdline(':', {
     mapping = cmp.mapping.preset.cmdline(),
     sources = cmp.config.sources({
@@ -368,5 +339,4 @@ cmp.setup.cmdline(':', {
     })
 })
 
--- Colorscheme
 vim.cmd('colorscheme nord')
