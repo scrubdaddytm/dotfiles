@@ -170,8 +170,17 @@ Plug('arcticicestudio/nord-vim', { branch = 'main' })
 
 vim.call('plug#end')
 
--- Airline settings
 vim.g.airline_powerline_fonts = 1
+vim.g.airline_section_c = '%{pathshorten(expand("%:~:."))}'
+vim.g['airline_inactive_collapse'] = 0
+
+vim.cmd([[
+  augroup AirlineInactivePath
+    autocmd!
+    autocmd WinEnter * let w:airline_section_c = '%{pathshorten(expand("%:~:."))}'
+    autocmd WinLeave * let w:airline_section_c = '%f'
+  augroup END
+]])
 
 -- Copilot settings (only if available)
 if vim.fn.exists('*copilot#Accept') == 1 then
