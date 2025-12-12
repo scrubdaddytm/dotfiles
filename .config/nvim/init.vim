@@ -20,7 +20,7 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
 
-    Plug 'preservim/nerdtree'
+    Plug 'nvim-tree/nvim-tree.lua'
     Plug 'preservim/tagbar'
     Plug 'OXY2DEV/markview.nvim'
 
@@ -145,7 +145,7 @@ noremap <leader>W :w !sudo tee % > /dev/null<CR>
 noremap <f12> :!ctags -L <(find . -name '*.py') --fields=+iaS --python-kinds=-i --sort=yes --extra=+q<cr>
 map <F5> :w<CR>:!ipython "%"<CR>
 
-nmap <F7> :NERDTreeToggle<CR>
+nnoremap <F7> :NvimTreeToggle<CR>
 nmap <F8> :TagbarToggle<CR>
 nmap <F9> :Black<CR>
 
@@ -181,6 +181,13 @@ lua << EOF
   require("which-key").setup {
     -- default configuration currently
   }
+
+  -- nvim-tree setup
+  require("nvim-tree").setup({
+    renderer = {
+      group_empty = true,
+    },
+  })
 
   -- nvim-cmp setup
   local cmp = require'cmp'
