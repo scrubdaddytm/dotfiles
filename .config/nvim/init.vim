@@ -47,8 +47,14 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
 
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    Plug 'deoplete-plugins/deoplete-jedi'
+    Plug 'hrsh7th/nvim-cmp'
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-cmdline'
+    Plug 'L3MON4D3/LuaSnip'
+    Plug 'saadparwaiz1/cmp_luasnip'
+
     Plug 'dense-analysis/ale'
 
     Plug 'psf/black', { 'branch': 'stable' }
@@ -115,8 +121,6 @@ autocmd BufNewFile,BufRead *.md set filetype=markdown
 abbr istrace import ipdb; ipdb.set_trace()
 abbr strace ipdb.set_trace()
 
-let g:deoplete#enable_at_startup = 1
-
 let g:ale_python_auto_virtualenv = 1
 let g:ale_python_auto_poetry = 1
 let g:ale_python_flake8_options = '--max-line-length=100'
@@ -177,6 +181,59 @@ lua << EOF
   require("which-key").setup {
     -- default configuration currently
   }
+
+  -- nvim-cmp setup
+  local cmp = require'cmp'
+  local luasnip = require'luasnip'
+
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        luasnip.lsp_expand(args.body)
+      end,
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+      ['<Tab>'] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        elseif luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        else
+          fallback()
+        end
+      end, { 'i', 's' }),
+      ['<S-Tab>'] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.select_prev_item()
+        elseif luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        else
+          fallback()
+        end
+      end, { 'i', 's' }),
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'luasnip' },
+      { name = 'buffer' },
+      { name = 'path' },
+    })
+  })
+
+  -- Command-line completion
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
 EOF
 
 "" MUST be after all variables are configured
