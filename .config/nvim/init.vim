@@ -54,7 +54,11 @@ silent! if plug#begin('~/.vim/plugged')
     Plug 'L3MON4D3/LuaSnip'
     Plug 'saadparwaiz1/cmp_luasnip'
 
-    Plug 'dense-analysis/ale'
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'williamboman/mason.nvim'
+    Plug 'williamboman/mason-lspconfig.nvim'
+    Plug 'nvimtools/none-ls.nvim'
+    Plug 'nvim-lua/plenary.nvim'
 
     Plug 'psf/black', { 'branch': 'stable' }
 
@@ -120,22 +124,6 @@ autocmd BufNewFile,BufRead *.md set filetype=markdown
 abbr istrace import ipdb; ipdb.set_trace()
 abbr strace ipdb.set_trace()
 
-let g:ale_python_auto_virtualenv = 1
-let g:ale_python_auto_poetry = 1
-let g:ale_python_flake8_options = '--max-line-length=100'
-let g:ale_fix_on_save = 1
-let g:ale_linters = {
-\   'python': ['flake8', 'mypy', 'pyright'],
-\   'zsh': ['shell']
-\}
-
-let g:ale_fixers = {
-\    'python': ['black', 'autopep8', 'isort'],
-\    '*': ['remove_trailing_lines', 'trim_whitespace'],
-\}
-
-let g:ale_python_black_options='--line-length=131'
-
 "" Mappings
 let mapleader=","
 
@@ -186,6 +174,60 @@ lua << EOF
     renderer = {
       group_empty = true,
     },
+  })
+
+  require("mason").setup()
+  require("mason-lspconfig").setup({
+    ensure_installed = { "pyright", "lua_ls" },
+    automatic_installation = true,
+  })
+
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+  vim.lsp.config.pyright = {
+    cmd = { 'pyright-langserver', '--stdio' },
+    filetypes = { 'python' },
+    root_markers = { 'pyproject.toml', 'setup.py', 'requirements.txt', '.git' },
+    capabilities = capabilities,
+  }
+
+  vim.lsp.config.lua_ls = {
+    cmd = { 'lua-language-server' },
+    filetypes = { 'lua' },
+    root_markers = { '.luarc.json', '.luarc.jsonc', '.luacheckrc', '.git' },
+    settings = {
+      Lua = {
+        diagnostics = {
+          globals = { 'vim' },
+        },
+      },
+    },
+    capabilities = capabilities,
+  }
+
+  vim.lsp.enable({ 'pyright', 'lua_ls' })
+
+  local null_ls = require("null-ls")
+  null_ls.setup({
+    sources = {
+      null_ls.builtins.formatting.black.with({
+        extra_args = { "--line-length", "131" },
+      }),
+      null_ls.builtins.formatting.isort,
+    },
+  })
+
+  -- LSP keybindings
+  vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+      local opts = { buffer = args.buf }
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+      vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+      vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+      vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+      vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+      vim.keymap.set('n', '<leader>F', vim.lsp.buf.format, opts)
+    end,
   })
 
   -- nvim-cmp setup
