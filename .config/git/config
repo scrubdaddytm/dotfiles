@@ -25,3 +25,5 @@
 	path = .gitconfig.local
 [column]
 	ui = auto
+[init]
+	defaultBranch = main

@@ -9,6 +9,8 @@ fi
 
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.npm-prefix/bin:$PATH"
+
 
 if [[ "$system_type" = "Darwin" ]]; then
   export PATH="/opt/homebrew/bin:$PATH"
@@ -110,10 +112,8 @@ elif [[ "$system_type" = "WSL" ]]; then
   eval "$(keychain --eval --agents ssh id_ed25519)"
 fi
 
-if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]; then
-    ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
-    export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
-fi
+# Point to the stable socket managed by agenttmux and ~/.ssh/rc
+export SSH_AUTH_SOCK="$HOME/.agent-sshtmux-$USER.sock"
 
 if command -v aactivator >/dev/null; then
   eval "$(aactivator init)"

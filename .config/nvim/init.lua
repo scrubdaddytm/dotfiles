@@ -61,6 +61,9 @@ vim.opt.backup = false
 vim.opt.swapfile = false
 vim.opt.writebackup = false
 
+vim.opt.wildmenu = true
+vim.opt.wildmode = 'longest:full,full'
+
 vim.opt.list = true
 vim.opt.listchars = {
     tab = '→~',
@@ -145,8 +148,6 @@ Plug('psf/black', { branch = 'stable' })
 Plug('echasnovski/mini.nvim', { branch = 'stable' })
 Plug('nvim-tree/nvim-web-devicons')
 
-Plug('github/copilot.vim')
-
 Plug('arcticicestudio/nord-vim', { branch = 'main' })
 
 vim.call('plug#end')
@@ -162,14 +163,6 @@ vim.cmd([[
     autocmd WinLeave * let w:airline_section_c = '%f'
   augroup END
 ]])
-
-if vim.fn.exists('*copilot#Accept') == 1 then
-    vim.keymap.set('i', '<C-y>', 'copilot#Accept("\\<CR>")', { expr = true, silent = true, script = true })
-    vim.g.copilot_no_tab_map = true
-    vim.keymap.set('i', '<C-]>', '<Plug>(copilot-next)')
-    vim.keymap.set('i', '<C-[>', '<Plug>(copilot-previous)')
-    vim.keymap.set('i', '<C-\\>', '<Plug>(copilot-dismiss)')
-end
 
 local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
@@ -220,35 +213,33 @@ if has_treesitter then
 end
 
 require('mason').setup()
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local lspconfig = require('lspconfig')
+
 require('mason-lspconfig').setup({
     ensure_installed = { 'pyright', 'lua_ls' },
     automatic_installation = true,
-})
-
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-vim.lsp.config.pyright = {
-    cmd = { 'pyright-langserver', '--stdio' },
-    filetypes = { 'python' },
-    root_markers = { 'pyproject.toml', 'setup.py', 'requirements.txt', '.git' },
-    capabilities = capabilities,
-}
-
-vim.lsp.config.lua_ls = {
-    cmd = { 'lua-language-server' },
-    filetypes = { 'lua' },
-    root_markers = { '.luarc.json', '.luarc.jsonc', '.luacheckrc', '.git' },
-    settings = {
-        Lua = {
-            diagnostics = {
-                globals = { 'vim' },
-            },
-        },
+    handlers = {
+        function(server_name)
+            lspconfig[server_name].setup({
+                capabilities = capabilities,
+            })
+        end,
+        ['lua_ls'] = function()
+            lspconfig.lua_ls.setup({
+                capabilities = capabilities,
+                settings = {
+                    Lua = {
+                        diagnostics = {
+                            globals = { 'vim' },
+                        },
+                    },
+                },
+            })
+        end,
     },
-    capabilities = capabilities,
-}
-
-vim.lsp.enable({ 'pyright', 'lua_ls' })
+})
 
 local null_ls = require('null-ls')
 null_ls.setup({
@@ -327,15 +318,6 @@ cmp.setup({
         { name = 'luasnip' },
         { name = 'buffer' },
         { name = 'path' },
-    })
-})
-
-cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-        { name = 'path' }
-    }, {
-        { name = 'cmdline' }
     })
 })
 
