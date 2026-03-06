@@ -10,6 +10,7 @@ fi
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.npm-prefix/bin:$PATH"
+export PATH="$HOME/.yadm-project/:$PATH"
 
 
 if [[ "$system_type" = "Darwin" ]]; then
