@@ -1,9 +1,14 @@
 #!/bin/sh
-echo "bootstrapping omz"
+set -eu
+
+echo "bootstrapping shell setup"
 
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_CUSTOM="$HOME/.zsh"
 export TMUX_HOME="$HOME/.tmux"
+
+BIN_DIR="$HOME/bin"
+mkdir -p "$BIN_DIR"
 
 clone_or_pull()
 {
@@ -16,6 +21,46 @@ clone_or_pull()
     fi
 }
 
+install_eza()
+{
+    if command -v eza >/dev/null 2>&1; then
+      echo "eza already installed: $(eza --version | head -1)"
+      return
+    fi
+    echo "installing eza..."
+    EZA_VERSION=$(curl -sL https://api.github.com/repos/eza-community/eza/releases/latest | grep '"tag_name"' | sed 's/.*"v\(.*\)".*/\1/')
+    curl -sL "https://github.com/eza-community/eza/releases/download/v${EZA_VERSION}/eza_x86_64-unknown-linux-gnu.tar.gz" | tar xz -C "$BIN_DIR"
+    chmod +x "$BIN_DIR/eza"
+    echo "eza ${EZA_VERSION} installed to $BIN_DIR/eza"
+}
+
+install_neofetch()
+{
+    if command -v neofetch >/dev/null 2>&1; then
+      echo "neofetch already installed"
+      return
+    fi
+    echo "installing neofetch..."
+    curl -sL https://raw.githubusercontent.com/dylanaraps/neofetch/master/neofetch -o "$BIN_DIR/neofetch"
+    chmod +x "$BIN_DIR/neofetch"
+    echo "neofetch installed to $BIN_DIR/neofetch"
+}
+
+# Check for ghostty terminfo
+if ! infocmp xterm-ghostty >/dev/null 2>&1; then
+  echo ""
+  echo "WARNING: xterm-ghostty terminfo not found."
+  echo "Run this from your local Ghostty terminal to install it:"
+  echo ""
+  echo "  infocmp -x xterm-ghostty | ssh $(hostname) -- tic -x -"
+  echo ""
+fi
+
+# Install tools into ~/bin
+install_eza
+install_neofetch
+
+# oh-my-zsh
 if [ ! -d "$ZSH" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || exit 1
 fi
@@ -24,13 +69,15 @@ if [ -f ~/.zshrc.pre-oh-my-zsh ]; then
   mv ~/.zshrc.pre-oh-my-zsh ~/.zshrc
 fi
 
+# zsh plugins and themes
 clone_or_pull https://github.com/tmux-plugins/tpm "$TMUX_HOME/plugins/tpm"
 clone_or_pull https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 clone_or_pull https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
 
+# Yelp-specific git config
 if hostname -f | grep -q "yelpcorp"; then
   git config --global user.email "tucker@yelp.com"
   echo "Configured git with tucker@yelp.com (Yelp host)"
 fi
 
-echo "omz bootstrap complete"
+echo "shell bootstrap complete"
