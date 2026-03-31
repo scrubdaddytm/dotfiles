@@ -1,10 +1,12 @@
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 vim.opt.runtimepath:prepend('~/.vim')
 vim.opt.runtimepath:append('~/.vim/after')
 vim.opt.packpath = vim.opt.runtimepath:get()
 
 vim.g.neovim_python3_venv = vim.fn.expand('~/.venvs/neovim-python3')
 vim.g.python3_host_prog = vim.g.neovim_python3_venv .. '/bin/python3'
-vim.g.black_virtualenv = vim.g.neovim_python3_venv
 
 if vim.fn.isdirectory(vim.g.neovim_python3_venv) == 0 then
     print('Creating neovim Python virtualenv...')
@@ -23,7 +25,7 @@ end
 vim.opt.encoding = 'utf8'
 vim.opt.hidden = true
 vim.opt.visualbell = true
-vim.opt.clipboard = 'unnamed'
+vim.opt.clipboard = 'unnamedplus'
 
 vim.opt.undofile = true
 local undodir = vim.fn.expand('~/.vim/undo')
@@ -124,8 +126,6 @@ Plug('mbbill/undotree')
 
 Plug('folke/which-key.nvim')
 
-Plug('dracula/vim', { as = 'dracula' })
-
 Plug('vim-airline/vim-airline')
 Plug('vim-airline/vim-airline-themes')
 
@@ -143,9 +143,7 @@ Plug('williamboman/mason-lspconfig.nvim')
 Plug('nvimtools/none-ls.nvim')
 Plug('nvim-lua/plenary.nvim')
 
-Plug('psf/black', { branch = 'stable' })
 
-Plug('echasnovski/mini.nvim', { branch = 'stable' })
 Plug('nvim-tree/nvim-web-devicons')
 
 Plug('arcticicestudio/nord-vim', { branch = 'main' })
@@ -172,7 +170,7 @@ keymap('', '<F5>', ':w<CR>:!ipython "%"<CR>', { noremap = false })
 
 keymap('n', '<F7>', ':NvimTreeToggle<CR>', opts)
 keymap('n', '<F8>', '<cmd>AerialToggle<CR>', opts)
-keymap('n', '<F9>', ':Black<CR>', opts)
+
 keymap('n', '<leader>s', ':<C-u>call gitblame#echo()<CR>', opts)
 keymap('n', '<space>', 'viw', { noremap = false })
 keymap('n', '<F2>', ':set invpaste paste?<CR>', opts)
