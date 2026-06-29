@@ -30,6 +30,8 @@ Prefix: **C-a** (Ctrl+a)
 | `C-a x` | Kill pane |
 | `C-a z` | Zoom/unzoom pane |
 | `C-a !` | Break pane into own window |
+| `C-a {` | Move pane left |
+| `C-a }` | Move pane right |
 
 ## Sessions (tmux-sessionist)
 

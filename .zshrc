@@ -83,6 +83,7 @@ bashcompinit
 alias vim=nvim
 alias vi=nvim
 alias vimdiff='nvim -d'
+alias nvimdiff='nvim -d'
 
 command -v eza >/dev/null || alias eza='exa'
 

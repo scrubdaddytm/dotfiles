@@ -1,8 +1,21 @@
 REPOS_DIR=$HOME/pg
 
+_fzf_dash_underscore_agnostic() {
+    local -A orig_map
+    local lines=() normalized
+    while IFS= read -r line; do
+        normalized="${line//[-_]/-}"
+        orig_map[$normalized]=$line
+        lines+=("$normalized")
+    done
+    local selected
+    selected=$(printf '%s\n' "${lines[@]}" | fzf "$@")
+    [[ -n "$selected" ]] && echo "${orig_map[$selected]}"
+}
+
 repo () {
     REPOS=$(find $REPOS_DIR -type d -exec test -d '{}/.git' \; -prune -print;)
-    SELECTED_REPO=$(echo "$REPOS" | sed "s,$REPOS_DIR/,," | fzf)
+    SELECTED_REPO=$(echo "$REPOS" | sed "s,$REPOS_DIR/,," | _fzf_dash_underscore_agnostic)
     if [[ -n "$SELECTED_REPO" ]]; then
         cd "$REPOS_DIR/$SELECTED_REPO"
     fi
