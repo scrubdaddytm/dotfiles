@@ -109,8 +109,26 @@ elif [[ "$system_type" = "WSL" ]]; then
   eval "$(keychain --eval --agents ssh id_ed25519)"
 fi
 
-# Point to the stable socket managed by agenttmux and ~/.ssh/rc
-export SSH_AUTH_SOCK="$HOME/.agent-sshtmux-$USER.sock"
+# --- SSH agent socket resolution ---
+# 1. Forwarded-agent case (remote host): ~/.ssh/rc maintains a stable per-user
+#    socket so tmux sessions survive autossh reconnects. Prefer it if present.
+# 2. Local case (macOS): login shells inherit the launchd agent's socket, whose
+#    path changes every boot. Pin it to a stable symlink so tmux panes (which read
+#    ~/.ssh/ssh_auth_sock, set in tmux.conf) keep resolving to the live agent.
+if [[ -S "$HOME/.agent-sshtmux-$USER.sock" ]]; then
+  export SSH_AUTH_SOCK="$HOME/.agent-sshtmux-$USER.sock"
+elif [[ -S "$SSH_AUTH_SOCK" && "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]]; then
+  ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
+  export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+elif [[ -S "$HOME/.ssh/ssh_auth_sock" ]]; then
+  export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+fi
+
+# On macOS, load keys (and their Keychain-stored passphrases) into the agent if
+# it's empty — so a fresh terminal after reboot works without re-entering them.
+if [[ "$system_type" = "Darwin" ]]; then
+  ssh-add -l &>/dev/null || ssh-add --apple-load-keychain 2>/dev/null
+fi
 
 if command -v aactivator >/dev/null; then
   eval "$(aactivator init)"
