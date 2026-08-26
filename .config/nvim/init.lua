@@ -27,6 +27,18 @@ vim.opt.hidden = true
 vim.opt.visualbell = true
 vim.opt.clipboard = 'unnamedplus'
 
+vim.g.clipboard = {
+    name = 'OSC 52',
+    copy = {
+        ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+        ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+    },
+    paste = {
+        ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+        ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+    },
+}
+
 vim.opt.undofile = true
 local undodir = vim.fn.expand('~/.vim/undo')
 vim.opt.undodir = undodir
@@ -146,11 +158,12 @@ Plug('nvim-lua/plenary.nvim')
 
 Plug('nvim-tree/nvim-web-devicons')
 
-Plug('arcticicestudio/nord-vim', { branch = 'main' })
+Plug('catppuccin/nvim', { ['as'] = 'catppuccin' })
 
 vim.call('plug#end')
 
 vim.g.airline_powerline_fonts = 1
+vim.g.airline_theme = 'catppuccin_mocha'
 vim.g.airline_section_c = '%{pathshorten(expand("%:~:."))}'
 vim.g['airline_inactive_collapse'] = 0
 
@@ -319,4 +332,4 @@ cmp.setup({
     })
 })
 
-vim.cmd('colorscheme nord')
+vim.cmd('colorscheme catppuccin-mocha')

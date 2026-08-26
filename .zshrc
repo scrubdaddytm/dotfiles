@@ -1,10 +1,3 @@
-# OPENSPEC:START
-# OpenSpec shell completions configuration
-fpath=("/nail/home/tucker/.oh-my-zsh/custom/completions" $fpath)
-autoload -Uz compinit
-compinit
-# OPENSPEC:END
-
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -14,6 +7,7 @@ if [[ $(uname -r) =~ [Mm]icrosoft ]]; then
   system_type="WSL"
 fi
 
+typeset -U path
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.npm-prefix/bin:$PATH"
@@ -37,7 +31,7 @@ export VIM_HOME=$HOME/.vim
 export TMUX_HOME=$HOME/.tmux
 
 if [[ -o login ]] && [[ -o interactive ]]; then
-  neofetch
+  neofetch &!
 fi
 
 plugins=(
@@ -57,7 +51,6 @@ plugins=(
 
 files_to_source=(
   "$ZSH/oh-my-zsh.sh"
-  "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
   "$HOME/.yelp-zsh-config"
   "$ZSH_CUSTOM/functions"
   "$ZSH_CUSTOM/yelp-functions"
@@ -69,13 +62,6 @@ for file in "${files_to_source[@]}"; do
     source "$file"
   fi
 done
-
-autoload -Uz compinit
-if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
-  compinit
-else
-  compinit -C
-fi
 
 autoload bashcompinit
 bashcompinit
